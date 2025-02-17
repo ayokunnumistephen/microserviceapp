@@ -32,7 +32,7 @@ pipeline {
                 script {
                     sh """
                         git clone ${GIT_REPO_URL}
-                        cd set1-microserviceapp
+                        cd microserviceapp
                         git config --global user.email "jenkins@eamanzetec.com.ng"
                         git config --global user.name "Jenkins CI"
                         git checkout ${STAGE_BRANCH}
@@ -53,7 +53,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        cd set1-microserviceapp
+                        cd microserviceapp
                         git checkout ${MAIN_BRANCH}
                         git config --global user.email "jenkins@eamanzetec.com.ng"
                         git config --global user.name "Jenkins CI"
