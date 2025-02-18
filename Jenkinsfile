@@ -43,6 +43,9 @@ pipeline {
                             git pull origin ${STAGE_BRANCH} --rebase
                             sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_TAG}|' ${DEPLOYMENT_MANIFEST}
                             git add ${DEPLOYMENT_MANIFEST}
+                            if git diff --cached --quiet; then
+                                echo "No changes detected, skipping commit in stage branch."
+                            else
                             git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in stage branch"
                             git push https://\$GIT_USERNAME:\$GIT_TOKEN@github.com/ayokunnumistephen/microserviceapp.git ${STAGE_BRANCH}
                         """
@@ -61,13 +64,16 @@ pipeline {
                     // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
-                           cd ${APP_REPO_NAME}
+                            cd ${APP_REPO_NAME}
                             git checkout ${MAIN_BRANCH}
                             git pull origin ${MAIN_BRANCH} --rebase
                             git config --global user.email "jenkins@eamanzetec.com.ng"
                             git config --global user.name "Jenkins CI"
                             sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_TAG}|' ${DEPLOYMENT_MANIFEST}
                             git add ${DEPLOYMENT_MANIFEST}
+                            if git diff --cached --quiet; then
+                                echo "No changes detected, skipping commit in main branch."
+                            else
                             git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in main branch"
                             git push https://\$GIT_USERNAME:\$GIT_TOKEN@github.com/ayokunnumistephen/microserviceapp.git ${MAIN_BRANCH}
                         """
