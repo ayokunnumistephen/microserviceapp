@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        APP_REPO_NAME = "microserviceapp"
         IMAGE_NAME = "stephenadmin/checkoutservice"
         BUILD_TAG = "${BUILD_NUMBER}"
         DEPLOYMENT_MANIFEST = "deployment-service.yml"
@@ -33,11 +34,13 @@ pipeline {
                     // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
+                            rm -rf ${APP_REPO_NAME} || true
                             git clone ${GIT_REPO_URL}
-                            cd microserviceapp
+                            cd ${APP_REPO_NAME}
                             git config --global user.email "jenkins@eamanzetec.com.ng"
                             git config --global user.name "Jenkins CI"
                             git checkout ${STAGE_BRANCH}
+                            git pull origin ${STAGE_BRANCH} --rebase
                             sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_TAG}|' ${DEPLOYMENT_MANIFEST}
                             git add ${DEPLOYMENT_MANIFEST}
                             git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in stage branch"
@@ -58,8 +61,9 @@ pipeline {
                     // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
-                            cd microserviceapp
+                            cd ${APP_REPO_NAME}
                             git checkout ${MAIN_BRANCH}
+                            git pull origin ${MAIN_BRANCH} --rebase
                             git config --global user.email "jenkins@eamanzetec.com.ng"
                             git config --global user.name "Jenkins CI"
                             sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_TAG}|' ${DEPLOYMENT_MANIFEST}
