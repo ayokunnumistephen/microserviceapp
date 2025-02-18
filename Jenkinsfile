@@ -60,7 +60,6 @@ pipeline {
                     // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
-                            rm -rf microserviceapp || true
                             cd microserviceapp
                             git checkout ${MAIN_BRANCH}
                             git pull origin ${STAGE_BRANCH} --rebase
