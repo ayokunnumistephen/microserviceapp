@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        APP_REPO_NAME = "microserviceapp"
         IMAGE_NAME = "stephenadmin/productcatalogservice"
         BUILD_TAG = "${BUILD_NUMBER}"
         DEPLOYMENT_MANIFEST = "deployment-service.yml"
