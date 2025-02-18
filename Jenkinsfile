@@ -38,6 +38,7 @@ pipeline {
                             git config --global user.email "jenkins@eamanzetec.com.ng"
                             git config --global user.name "Jenkins CI"
                             git checkout ${STAGE_BRANCH}
+                            git pull origin ${STAGE_BRANCH} --rebase
                             sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_TAG}|' ${DEPLOYMENT_MANIFEST}
                             git add ${DEPLOYMENT_MANIFEST}
                             git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in stage branch"
@@ -60,6 +61,7 @@ pipeline {
                         sh """
                             cd microserviceapp
                             git checkout ${MAIN_BRANCH}
+                            git pull origin ${STAGE_BRANCH} --rebase
                             git config --global user.email "jenkins@eamanzetec.com.ng"
                             git config --global user.name "Jenkins CI"
                             sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_TAG}|' ${DEPLOYMENT_MANIFEST}
