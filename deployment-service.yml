@@ -297,7 +297,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: stephenadmin/paymentservice:latest
+        image: stephenadmin/paymentservice:1
         ports:
         - containerPort: 50051
         env:
