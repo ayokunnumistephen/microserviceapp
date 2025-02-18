@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        APP_REPO_NAME = "microserviceapp"
         IMAGE_NAME = "stephenadmin/recommendationservice"
         BUILD_TAG = "${BUILD_NUMBER}"
         DEPLOYMENT_MANIFEST = "deployment-service.yml"
@@ -33,9 +34,9 @@ pipeline {
                     // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
-                            rm -rf microserviceapp || true
+                            rm -rf ${APP_REPO_NAME} || true
                             git clone ${GIT_REPO_URL}
-                            cd microserviceapp
+                            cd ${APP_REPO_NAME}
                             git config --global user.email "jenkins@eamanzetec.com.ng"
                             git config --global user.name "Jenkins CI"
                             git checkout ${STAGE_BRANCH}
@@ -60,7 +61,7 @@ pipeline {
                     // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
-                            cd microserviceapp
+                            cd ${APP_REPO_NAME}
                             git checkout ${MAIN_BRANCH}
                             git pull origin ${MAIN_BRANCH} --rebase
                             git config --global user.email "jenkins@eamanzetec.com.ng"
