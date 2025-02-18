@@ -62,7 +62,7 @@ pipeline {
                         sh """
                             cd microserviceapp
                             git checkout ${MAIN_BRANCH}
-                            git pull origin ${STAGE_BRANCH} --rebase
+                            git pull origin ${MAIN_BRANCH} --rebase
                             git config --global user.email "jenkins@eamanzetec.com.ng"
                             git config --global user.name "Jenkins CI"
                             sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_TAG}|' ${DEPLOYMENT_MANIFEST}
