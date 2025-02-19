@@ -58,7 +58,7 @@ pipeline {
             }
         }
 
-        stage('Manual Approval for Main Branch Update') {
+        stage('Manual Approval for shipingservice pipeline to Main Branch Update') {
             steps {
                 script {
                     slackSend(channel: SLACK_CHANNEL, message: " *Manual Approval Required!* Please approve deployment to the *main* branch.")
@@ -95,12 +95,12 @@ pipeline {
     post {
         success {
             script {
-                slackSend(channel: SLACK_CHANNEL, message: "✅ *Build Succeeded!* Jenkins has successfully completed the pipeline. 🎉")
+                slackSend(channel: SLACK_CHANNEL, message: "✅ *Build Succeeded!* Jenkins has successfully completed the shippingservice pipeline. 🎉")
             }
         }
         failure {
             script {
-                slackSend(channel: SLACK_CHANNEL, message: "❌ *Build Failed!* Please check the Jenkins logs for details. 🔴")
+                slackSend(channel: SLACK_CHANNEL, message: "❌ *Build Failed! for shippingservice* Please check the Jenkins logs for details. 🔴")
             }
         }
     }
