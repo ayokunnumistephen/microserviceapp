@@ -8,7 +8,7 @@ pipeline {
         GIT_REPO_URL = "https://github.com/ayokunnumistephen/microserviceapp.git"
         STAGE_BRANCH = "stage"
         MAIN_BRANCH = "main"
-        SLACK_CHANNEL = "@Ayokunnumi"
+        SLACK_CHANNEL = "@Ayokunnumi" 
     }
     
     stages {
@@ -50,7 +50,7 @@ pipeline {
                                 echo "No changes detected, skipping commit in stage branch."
                             else
                                 git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in stage branch"
-                                git push https://\$GIT_USERNAME:\$GIT_TOKEN@${GIT_REPO_URL} ${STAGE_BRANCH}
+                                git push https://${GIT_USERNAME}:${GIT_TOKEN}@${GIT_REPO_URL#https://} ${STAGE_BRANCH}
                             fi
                         """
                     }
@@ -83,7 +83,7 @@ pipeline {
                                 echo "No changes detected, skipping commit in main branch."
                             else
                                 git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in main branch"
-                                git push https://\$GIT_USERNAME:\$GIT_TOKEN@${GIT_REPO_URL} ${MAIN_BRANCH}
+                                git push https://${GIT_USERNAME}:${GIT_TOKEN}@${GIT_REPO_URL#https://} ${MAIN_BRANCH}
                             fi
                         """
                     }
