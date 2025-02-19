@@ -81,7 +81,7 @@ spec:
       serviceAccountName: default
       containers:
         - name: server
-          image: stephenadmin/checkoutservice:2
+          image: stephenadmin/checkoutservice:3
           ports:
           - containerPort: 5050
           readinessProbe:
