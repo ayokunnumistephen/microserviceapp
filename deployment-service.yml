@@ -28,7 +28,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: stephenadmin/emailservice:4
+        image: stephenadmin/emailservice:2
         ports:
         - containerPort: 8080
         env:
