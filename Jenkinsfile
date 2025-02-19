@@ -8,7 +8,9 @@ pipeline {
         GIT_REPO_URL = "https://github.com/ayokunnumistephen/microserviceapp.git"
         STAGE_BRANCH = "stage"
         MAIN_BRANCH = "main"
+        SLACK_CHANNEL = "@Ayokunnumi"
     }
+    
     stages {
         stage('Build & Tag Docker Image') {
             steps {
@@ -19,6 +21,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Push Docker Image') {
             steps {
                 script {
@@ -28,10 +31,10 @@ pipeline {
                 }
             }
         }
+        
         stage('Update Deployment Manifest in Stage Branch') {
             steps {
                 script {
-                    // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
                             rm -rf ${APP_REPO_NAME} || true
@@ -47,22 +50,26 @@ pipeline {
                                 echo "No changes detected, skipping commit in stage branch."
                             else
                                 git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in stage branch"
-                                git push https://\$GIT_USERNAME:\$GIT_TOKEN@github.com/ayokunnumistephen/microserviceapp.git ${STAGE_BRANCH}
+                                git push https://\$GIT_USERNAME:\$GIT_TOKEN@${GIT_REPO_URL} ${STAGE_BRANCH}
                             fi
                         """
                     }
                 }
             }
         }
+
         stage('Manual Approval for Main Branch Update') {
             steps {
+                script {
+                    slackSend(channel: SLACK_CHANNEL, message: " *Manual Approval Required!* Please approve deployment to the *main* branch.")
+                }
                 input message: "Approve updating deployment-service.yml in the main branch?"
             }
         }
+
         stage('Update Deployment Manifest in Main Branch') {
             steps {
                 script {
-                    // Using Git credentials
                     withCredentials([usernamePassword(credentialsId: 'git-cred', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh """
                             cd ${APP_REPO_NAME}
@@ -76,11 +83,24 @@ pipeline {
                                 echo "No changes detected, skipping commit in main branch."
                             else
                                 git commit -m "Update image tag to ${IMAGE_NAME}:${BUILD_TAG} in main branch"
-                                git push https://\$GIT_USERNAME:\$GIT_TOKEN@github.com/ayokunnumistephen/microserviceapp.git ${MAIN_BRANCH}
+                                git push https://\$GIT_USERNAME:\$GIT_TOKEN@${GIT_REPO_URL} ${MAIN_BRANCH}
                             fi
                         """
                     }
                 }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                slackSend(channel: SLACK_CHANNEL, message: "✅ *Build Succeeded!* Jenkins has successfully completed the pipeline. 🎉")
+            }
+        }
+        failure {
+            script {
+                slackSend(channel: SLACK_CHANNEL, message: "❌ *Build Failed!* Please check the Jenkins logs for details. 🔴")
             }
         }
     }
