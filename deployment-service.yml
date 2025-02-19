@@ -200,7 +200,7 @@ spec:
       serviceAccountName: default
       containers:
         - name: server
-          image: stephenadmin/frontend:4
+          image: stephenadmin/frontend:2
           ports:
           - containerPort: 8080
           readinessProbe:
