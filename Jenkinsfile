@@ -58,10 +58,10 @@ pipeline {
             }
         }
 
-        stage('Manual Approval for shipingservice pipeline to Main Branch Update') {
+        stage('Manual Approval for Main Branch Update') {
             steps {
                 script {
-                    slackSend(channel: SLACK_CHANNEL, message: " *Manual Approval Required!* Please approve deployment to the *main* branch.")
+                    slackSend(channel: SLACK_CHANNEL, message: " *Manual Approval Required for shippingservice pipeline!* Please approve deployment to the *main* branch.")
                 }
                 input message: "Approve updating deployment-service.yml in the main branch?"
             }
@@ -100,7 +100,7 @@ pipeline {
         }
         failure {
             script {
-                slackSend(channel: SLACK_CHANNEL, message: "❌ *Build Failed! for shippingservice* Please check the Jenkins logs for details. 🔴")
+                slackSend(channel: SLACK_CHANNEL, message: "❌ *Build Failed! for shippingservice pipeline* Please check the Jenkins logs for details. 🔴")
             }
         }
     }
