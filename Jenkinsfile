@@ -8,7 +8,7 @@ pipeline {
         GIT_REPO_URL = "https://github.com/ayokunnumistephen/microserviceapp.git"
         STAGE_BRANCH = "stage"
         MAIN_BRANCH = "main"
-        SLACK_CHANNEL = "@Ayokunnumi"
+        SLACK_CHANNEL = "U08AJNQDR60"
     }
     
     stages {
